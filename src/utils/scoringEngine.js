@@ -146,15 +146,52 @@ export const scoringCriteria = {
         }
       }
     }
+  },
+  // Collateral is separate evaluation, not part of main score
+  collateral: {
+    criteria: {
+      typeOfCollaterals: {
+        weight: 0.4,
+        scores: {
+          'Valuable papers issued by our bank/Government Bonds': 100,
+          'Valuable papers issued by other banks (excluding stocks)': 75,
+          'Real estate (housing)': 50,
+          'Real estate (for trading), other estates, stocks': 25,
+          'No collateral': 0
+        }
+      },
+      valueOfCollaterals: {
+        weight: 0.4,
+        scores: {
+          '>200%': 100,
+          '150-200%': 75,
+          '100-150%': 50,
+          '70-100%': 25,
+          '<70%': 0
+        }
+      },
+      fluctuationOfAssetPrice: {
+        weight: 0.2,
+        scores: {
+          '0% or no trend': 100,
+          '1-10%': 75,
+          '10-30%': 50,
+          '30-50%': 25,
+          '>50%': 0
+        }
+      }
+    }
   }
 };
 
 export const calculateScore = (formData) => {
   let personalityScore = 0;
   let capacityScore = 0;
+  let collateralScore = 0;
   const breakdown = {
     personality: {},
-    capacity: {}
+    capacity: {},
+    collateral: {}
   };
 
   // Calculate Personality Score
@@ -185,7 +222,21 @@ export const calculateScore = (formData) => {
     };
   });
 
-  // Calculate Total Score
+  // Calculate Collateral Score
+  Object.keys(scoringCriteria.collateral.criteria).forEach(criterion => {
+    const criterionData = scoringCriteria.collateral.criteria[criterion];
+    const value = formData[criterion];
+    const score = criterionData.scores[value] || 0;
+    const weightedScore = score * criterionData.weight;
+    collateralScore += weightedScore;
+    breakdown.collateral[criterion] = {
+      score,
+      weightedScore,
+      weight: criterionData.weight
+    };
+  });
+
+  // Calculate Total Score (Personality + Capacity only)
   const totalPersonality = personalityScore * scoringCriteria.personality.weight;
   const totalCapacity = capacityScore * scoringCriteria.capacity.weight;
   const totalScore = totalPersonality + totalCapacity;
@@ -193,10 +244,12 @@ export const calculateScore = (formData) => {
   return {
     personalityScore,
     capacityScore,
+    collateralScore,
     totalScore,
     breakdown,
     rating: getRating(totalScore),
-    recommendation: getRecommendation(totalScore)
+    recommendation: getRecommendation(totalScore),
+    collateralRating: getCollateralRating(collateralScore)
   };
 };
 
@@ -211,6 +264,12 @@ export const getRating = (score) => {
   if (score >= 40) return { grade: 'CC', status: 'Extremely Poor', color: '#dc2626', risk: 'High' };
   if (score >= 35) return { grade: 'C', status: 'Default Risk', color: '#991b1b', risk: 'High' };
   return { grade: 'D', status: 'Default', color: '#7f1d1d', risk: 'High' };
+};
+
+export const getCollateralRating = (score) => {
+  if (score >= 225) return { grade: 'A', status: 'Strong', color: '#10b981', evaluation: 'Strong' };
+  if (score >= 75) return { grade: 'B', status: 'Average', color: '#fbbf24', evaluation: 'Average' };
+  return { grade: 'C', status: 'Low', color: '#ef4444', evaluation: 'Low' };
 };
 
 export const getRecommendation = (score) => {
@@ -276,6 +335,11 @@ export const aNguyenCaseStudy = {
   debtPaymentsRatio: '<30% or No other debts',
   debtPaymentSituation: 'Having extended debts or No information',
   otherBankingServices: 'Current account or payment services only',
+  
+  // Collateral Information
+  typeOfCollaterals: 'Real estate (for trading), other estates, stocks',
+  valueOfCollaterals: '70-100%',
+  fluctuationOfAssetPrice: '10-30%',
   
   // Additional case details
   dateOfBirth: '15/3/2003',

@@ -51,6 +51,11 @@ Capacity (60%):
 3. Payment History (25%): Always on time=100, Extended but paying=75, Had bad debt=50, Bad debt+potential OD=25, Extended/No info=0
 4. Banking Services (15%): Saving+other=100, Saving OR other=75, Current only=50, Other loans=25, None=0
 
+COLLATERAL EVALUATION (Separate Rating):
+1. Type of Collaterals (40%): Gov bonds/Bank papers=100, Other bank papers=75, Real estate housing=50, Trading real estate/stocks=25, No collateral=0
+2. Value of Collaterals/Total debts (40%): >200%=100, 150-200%=75, 100-150%=50, 70-100%=25, <70%=0
+3. Fluctuation of asset price in 2 years (20%): 0%/no trend=100, 1-10%=75, 10-30%=50, 30-50%=25, >50%=0
+
 RATING SYSTEM:
 - AAA (80-100): Excellent, Low Risk, APPROVE
 - AA (70-79): Very Good, Low Risk, APPROVE
@@ -58,12 +63,20 @@ RATING SYSTEM:
 - BBB (50-59): Average, Medium Risk, Higher interest
 - BB (40-49): Below Average, High Risk
 - B (<40): Poor, High Risk, DENY
+
+TOTAL SCORE = Personality (40%) + Capacity (60%)
+
+COLLATERAL RATING (Separate Evaluation):
+- A (225-300): Strong collateral
+- B (75-224): Average collateral  
+- C (<75): Low collateral
 `;
 
     if (caseStudy) {
       context += `\n\nA NGUYEN CASE STUDY:
 Personal: 22yo, single, NEU graduate, VCB probationary (80% salary), renting with friend
 Financial: 3M VND monthly surplus, no debt, no insurance, no credit history
+Collateral: VF 5Plus car (vehicle), 70-100% value ratio, 10-30% price fluctuation
 Loan Request: 350M VND, 8.5% interest, 48 months for VF 5Plus car
 
 SCORING:
@@ -87,8 +100,21 @@ Capacity Breakdown:
 - Banking Current: 50 × 15% = 7.5
 Capacity Total: 37.5/100
 
+Collateral Breakdown:
+- Type Real estate housing: 50 × 40% = 20.0
+- Value 100-150%: 50 × 40% = 20.0
+- Fluctuation 10-30%: 50 × 20% = 10.0
+Collateral Total: 50/100
+
 FINAL SCORE: (52.5 × 0.4) + (37.5 × 0.6) = 21.0 + 22.5 = 43.5/100
-RATING: BB (Below Average) - High Risk
+RATING: CC (Extremely Poor) - High Risk
+
+COLLATERAL EVALUATION (Separate):
+- Type VF 5Plus car (vehicle): 25 × 40% = 10.0
+- Value 70-100%: 25 × 40% = 10.0
+- Fluctuation 10-30%: 50 × 20% = 10.0
+COLLATERAL TOTAL: 30/100
+COLLATERAL RATING: C (Low) - 30 points
 
 MONTHLY PAYMENT CALCULATION:
 Formula: PMT = P × [r(1+r)^n] / [(1+r)^n - 1]

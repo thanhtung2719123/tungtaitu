@@ -1,6 +1,6 @@
 import React from 'react';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
-import { TrendingUp, Award, AlertTriangle, CheckCircle } from 'lucide-react';
+import { TrendingUp, Award, AlertTriangle, CheckCircle, Shield } from 'lucide-react';
 
 const ScoreDashboard = ({ scoreData }) => {
   if (!scoreData) return null;
@@ -25,6 +25,13 @@ const ScoreDashboard = ({ scoreData }) => {
     name: key.replace(/([A-Z])/g, ' $1').trim(),
     score: breakdown.capacity[key].score,
     weighted: breakdown.capacity[key].weightedScore
+  }));
+
+  // Data for bar chart - Collateral breakdown
+  const collateralData = Object.keys(breakdown.collateral || {}).map(key => ({
+    name: key.replace(/([A-Z])/g, ' $1').trim(),
+    score: breakdown.collateral[key].score,
+    weighted: breakdown.collateral[key].weightedScore
   }));
 
   // Radar chart data
@@ -59,6 +66,14 @@ const ScoreDashboard = ({ scoreData }) => {
           <div className="stat-label">Capacity Score</div>
           <div className="progress-bar">
             <div className="progress-fill" style={{ width: `${capacityScore}%` }}></div>
+          </div>
+        </div>
+
+        <div className="card stat-card">
+          <div className="stat-value">{scoreData.collateralScore?.toFixed(1) || '0.0'}</div>
+          <div className="stat-label">Collateral Score</div>
+          <div className="progress-bar">
+            <div className="progress-fill" style={{ width: `${scoreData.collateralScore || 0}%` }}></div>
           </div>
         </div>
       </div>
@@ -102,6 +117,46 @@ const ScoreDashboard = ({ scoreData }) => {
             <p style={{ fontSize: '13px', color: '#6b7280', fontStyle: 'italic' }}>
               {recommendation.terms}
             </p>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Collateral Rating - Separate Section */}
+      <div className="card" style={{ marginBottom: '20px' }}>
+        <div className="section-title">
+          <Shield size={24} />
+          Collateral Rating (Separate Evaluation)
+        </div>
+        <div className="flex-center" style={{ padding: '30px', flexDirection: 'column', gap: '15px' }}>
+          <div style={{ 
+            fontSize: '64px', 
+            fontWeight: 700, 
+            color: scoreData.collateralRating?.color || '#6b7280'
+          }}>
+            {scoreData.collateralRating?.grade || 'N/A'}
+          </div>
+          <div style={{ 
+            fontSize: '20px', 
+            fontWeight: 600, 
+            color: scoreData.collateralRating?.color || '#6b7280'
+          }}>
+            {scoreData.collateralRating?.status || 'No Data'}
+          </div>
+          <div style={{ 
+            fontSize: '16px', 
+            color: '#6b7280',
+            textAlign: 'center'
+          }}>
+            {scoreData.collateralRating?.evaluation || 'No evaluation available'}
+          </div>
+          <div style={{ 
+            fontSize: '14px', 
+            color: '#9ca3af',
+            textAlign: 'center',
+            marginTop: '10px'
+          }}>
+            Collateral Score: {scoreData.collateralScore?.toFixed(1) || '0.0'}/100
           </div>
         </div>
       </div>
@@ -184,6 +239,24 @@ const ScoreDashboard = ({ scoreData }) => {
             <Tooltip />
             <Legend />
             <Bar dataKey="score" fill="#10b981" name="Raw Score" />
+            <Bar dataKey="weighted" fill="#f59e0b" name="Weighted Score" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Collateral Breakdown */}
+      <div className="card">
+        <div className="section-title">
+          Collateral Criteria Breakdown
+        </div>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={collateralData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="score" fill="#8b5cf6" name="Raw Score" />
             <Bar dataKey="weighted" fill="#f59e0b" name="Weighted Score" />
           </BarChart>
         </ResponsiveContainer>

@@ -183,7 +183,7 @@ function App() {
           Credit Scoring System | Powered by Gemini 2.5 Pro | Built with React
         </p>
         <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '10px' }}>
-          Total Score = Personality (40%) + Capacity (60%) | Chat with AI Assistant anytime! 💬
+          Total Score = Personality (40%) + Capacity (60%) | Collateral Rating (Separate) | Chat with AI Assistant anytime! 💬
         </p>
       </div>
     </div>
