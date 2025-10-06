@@ -1,4 +1,4 @@
-# Credit Scoring System - Deployment Guide
+# Group 3 - Credit Scoring System - Deployment Guide
 
 ## 🚀 Vercel Deployment
 
@@ -28,7 +28,7 @@ This React application is ready for deployment on Vercel.
 4. **Deploy:**
    - Click "Deploy"
    - Wait for build to complete
-   - Your app will be live at `https://tungtaitu.vercel.app`
+   - Your app will be live at `https://group-3.vercel.app`
 
 ### Features Included
 - ✅ Credit scoring system with Gemini 2.5 Pro integration

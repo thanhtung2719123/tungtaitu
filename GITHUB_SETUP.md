@@ -1,4 +1,4 @@
-# 🚀 GitHub Setup & Vercel Deployment Guide
+# 🚀 Group 3 - GitHub Setup & Vercel Deployment Guide
 
 ## Step 1: Initialize Git Repository
 
@@ -46,7 +46,7 @@ git push -u origin main
 4. **Deploy**
    - Click "Deploy"
    - Wait for build to complete
-   - Your app will be live at `https://tungtaitu.vercel.app`
+   - Your app will be live at `https://group-3.vercel.app`
 
 ### Option B: Vercel CLI
 
@@ -146,7 +146,7 @@ If you want to use your own Gemini API key:
 ## 🎉 Success!
 
 Your Credit Scoring System is now live at:
-**https://tungtaitu.vercel.app**
+**https://group-3.vercel.app**
 
 ### Features Available:
 - ✅ Credit scoring with Gemini 2.5 Pro

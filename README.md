@@ -1,4 +1,4 @@
-# 🏦 Credit Scoring System - AI Powered
+# 🏦 Group 3 - Credit Scoring System - AI Powered
 
 A comprehensive React-based credit scoring system with Gemini 2.5 Pro integration, designed for Vietnamese banking scenarios.
 
@@ -38,7 +38,7 @@ A comprehensive React-based credit scoring system with Gemini 2.5 Pro integratio
 ```bash
 # Clone the repository
 git clone https://github.com/thanhtung2719123/tungtaitu.git
-cd tungtaitu
+cd group-3
 
 # Install dependencies
 npm install
@@ -55,7 +55,7 @@ npm run build
 
 ## 📱 Live Demo
 
-**Deployed on Vercel**: [https://tungtaitu.vercel.app](https://tungtaitu.vercel.app)
+**Deployed on Vercel**: [https://group-3.vercel.app](https://group-3.vercel.app)
 
 ## 🏗️ Project Structure
 

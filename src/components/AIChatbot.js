@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, Send, Loader, X, Minimize2, Maximize2, Bot } from 'lucide-react';
+import { MessageCircle, Send, Loader, X, Minimize2, Maximize2, Bot, Calculator, TrendingUp, Award, AlertTriangle } from 'lucide-react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const AIChatbot = ({ isApiConnected, scoreData, formData, caseStudy }) => {
@@ -8,12 +8,173 @@ const AIChatbot = ({ isApiConnected, scoreData, formData, caseStudy }) => {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: "👋 Hi! I'm your Credit Scoring AI Assistant powered by Gemini 2.5 Pro. Ask me anything about:\n\n• How credit scores are calculated\n• Formula explanations\n• A Nguyen's case study\n• Improvement recommendations\n• Loan affordability\n• Any criterion details\n\nWhat would you like to know?"
+      content: "👋 Hi! I'm your Credit Scoring AI Assistant powered by Gemini 2.5 Pro.\n\nAsk me anything about:\n\n• How credit scores are calculated\n• Formula explanations\n• A Nguyen's case study\n• Improvement recommendations\n• Loan affordability\n• Any criterion details\n\nWhat would you like to know?"
     }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
+
+  // Function to format AI response with beautiful styling
+  const formatAIResponse = (content) => {
+    if (!content) return content;
+
+    // Split content into lines
+    const lines = content.split('\n');
+    const formattedLines = [];
+
+    lines.forEach((line, index) => {
+      const trimmedLine = line.trim();
+      
+      // Headers with icons
+      if (trimmedLine.startsWith('SCORING:') || trimmedLine.includes('SCORING:')) {
+        formattedLines.push(
+          <div key={index} style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '8px', 
+            margin: '16px 0 12px 0',
+            padding: '12px 16px',
+            background: 'linear-gradient(135deg, #667eea, #764ba2)',
+            borderRadius: '8px',
+            color: 'white',
+            fontWeight: '600',
+            fontSize: '16px'
+          }}>
+            <Calculator size={20} />
+            {trimmedLine}
+          </div>
+        );
+      }
+      else if (trimmedLine.includes('Personality Breakdown:') || trimmedLine.includes('Capacity Breakdown:')) {
+        formattedLines.push(
+          <div key={index} style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '8px', 
+            margin: '12px 0 8px 0',
+            padding: '8px 12px',
+            background: '#f0f9ff',
+            borderRadius: '6px',
+            color: '#1e40af',
+            fontWeight: '600',
+            fontSize: '15px',
+            borderLeft: '4px solid #3b82f6'
+          }}>
+            <TrendingUp size={18} />
+            {trimmedLine}
+          </div>
+        );
+      }
+      else if (trimmedLine.includes('FINAL SCORE:') || trimmedLine.includes('RATING:')) {
+        formattedLines.push(
+          <div key={index} style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '8px', 
+            margin: '12px 0 8px 0',
+            padding: '10px 14px',
+            background: trimmedLine.includes('RATING:') ? '#fef3c7' : '#ecfdf5',
+            borderRadius: '6px',
+            color: trimmedLine.includes('RATING:') ? '#92400e' : '#065f46',
+            fontWeight: '600',
+            fontSize: '15px',
+            borderLeft: '4px solid ' + (trimmedLine.includes('RATING:') ? '#f59e0b' : '#10b981')
+          }}>
+            <Award size={18} />
+            {trimmedLine}
+          </div>
+        );
+      }
+      else if (trimmedLine.includes('COLLATERAL') || trimmedLine.includes('Collateral')) {
+        formattedLines.push(
+          <div key={index} style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '8px', 
+            margin: '12px 0 8px 0',
+            padding: '8px 12px',
+            background: '#fef3c7',
+            borderRadius: '6px',
+            color: '#92400e',
+            fontWeight: '600',
+            fontSize: '15px',
+            borderLeft: '4px solid #f59e0b'
+          }}>
+            <AlertTriangle size={18} />
+            {trimmedLine}
+          </div>
+        );
+      }
+      // Formula lines with special styling
+      else if (trimmedLine.includes('×') || trimmedLine.includes('=') || trimmedLine.includes('Formula:')) {
+        formattedLines.push(
+          <div key={index} style={{ 
+            margin: '6px 0',
+            padding: '8px 12px',
+            background: '#f8fafc',
+            borderRadius: '6px',
+            fontFamily: 'Monaco, Consolas, monospace',
+            fontSize: '13px',
+            color: '#374151',
+            border: '1px solid #e5e7eb'
+          }}>
+            {trimmedLine}
+          </div>
+        );
+      }
+      // Bullet points with special styling
+      else if (trimmedLine.startsWith('•') || trimmedLine.startsWith('-')) {
+        formattedLines.push(
+          <div key={index} style={{ 
+            margin: '6px 0 6px 16px',
+            padding: '6px 12px',
+            background: '#f0f9ff',
+            borderRadius: '6px',
+            borderLeft: '3px solid #3b82f6',
+            lineHeight: '1.6',
+            fontSize: '14px'
+          }}>
+            {trimmedLine}
+          </div>
+        );
+      }
+      // Welcome message styling
+      else if (trimmedLine.includes('Hi!') || trimmedLine.includes('Ask me anything')) {
+        formattedLines.push(
+          <div key={index} style={{ 
+            margin: '8px 0',
+            padding: '12px 16px',
+            background: 'linear-gradient(135deg, #ecfdf5, #f0fdf4)',
+            borderRadius: '8px',
+            border: '1px solid #10b981',
+            lineHeight: '1.6',
+            fontSize: '15px',
+            fontWeight: '500'
+          }}>
+            {trimmedLine}
+          </div>
+        );
+      }
+      // Regular lines
+      else if (trimmedLine) {
+        formattedLines.push(
+          <div key={index} style={{ 
+            margin: '4px 0',
+            lineHeight: '1.6'
+          }}>
+            {trimmedLine}
+          </div>
+        );
+      }
+      // Empty lines
+      else {
+        formattedLines.push(<div key={index} style={{ height: '8px' }} />);
+      }
+    });
+
+    return formattedLines;
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -334,19 +495,30 @@ Please provide a helpful, accurate response. Use formulas and calculations when 
                 <div
                   style={{
                     maxWidth: '80%',
-                    padding: '12px 16px',
+                    padding: msg.role === 'user' ? '12px 16px' : '16px 20px',
                     borderRadius: '12px',
                     background: msg.role === 'user' 
                       ? 'linear-gradient(135deg, var(--primary), var(--secondary))' 
-                      : '#f3f4f6',
+                      : 'linear-gradient(135deg, #ffffff, #f8fafc)',
                     color: msg.role === 'user' ? 'white' : '#1f2937',
                     fontSize: '14px',
                     lineHeight: '1.6',
                     whiteSpace: 'pre-wrap',
-                    wordBreak: 'break-word'
+                    wordBreak: 'break-word',
+                    border: msg.role === 'assistant' ? '1px solid #e5e7eb' : 'none',
+                    boxShadow: msg.role === 'assistant' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none'
                   }}
                 >
-                  {msg.content}
+                  {msg.role === 'assistant' ? (
+                    <div style={{ 
+                      fontFamily: 'system-ui, -apple-system, sans-serif',
+                      lineHeight: '1.7'
+                    }}>
+                      {formatAIResponse(msg.content)}
+                    </div>
+                  ) : (
+                    msg.content
+                  )}
                 </div>
               </div>
             ))}
@@ -354,16 +526,20 @@ Please provide a helpful, accurate response. Use formulas and calculations when 
               <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
                 <div
                   style={{
-                    padding: '12px 16px',
+                    padding: '16px 20px',
                     borderRadius: '12px',
-                    background: '#f3f4f6',
+                    background: 'linear-gradient(135deg, #f0f9ff, #e0f2fe)',
+                    border: '1px solid #0ea5e9',
                     display: 'flex',
-                    gap: '8px',
-                    alignItems: 'center'
+                    gap: '12px',
+                    alignItems: 'center',
+                    boxShadow: '0 2px 8px rgba(14, 165, 233, 0.1)'
                   }}
                 >
-                  <Loader size={16} className="spin" />
-                  <span style={{ fontSize: '14px' }}>Thinking...</span>
+                  <Loader size={18} className="spin" style={{ color: '#0ea5e9' }} />
+                  <span style={{ fontSize: '14px', color: '#0369a1', fontWeight: '500' }}>
+                    AI is analyzing your question...
+                  </span>
                 </div>
               </div>
             )}
