@@ -1,9 +1,9 @@
 {
-  "name": "tungtaitu-credit-scoring",
+  "name": "group-3",
   "version": "1.0.0",
   "description": "AI-Powered Credit Scoring System for Vietnamese Banking with Gemini 2.5 Pro",
   "private": true,
-  "homepage": "https://tungtaitu.vercel.app",
+  "homepage": "https://group-3.vercel.app",
   "dependencies": {
     "@google/generative-ai": "^0.2.1",
     "react": "^18.2.0",
@@ -17,9 +17,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
